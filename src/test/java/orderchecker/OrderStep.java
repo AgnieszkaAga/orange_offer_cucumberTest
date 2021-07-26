@@ -41,8 +41,8 @@ public class OrderStep {
     public void tearDown() throws InterruptedException {
         Thread.sleep(3000);
         this.driver.manage().deleteAllCookies();
-//        this.driver.quit();
-//        this.driver = null;
+        this.driver.quit();
+        this.driver = null;
     }
 
 
@@ -51,41 +51,42 @@ public class OrderStep {
         driver.get("https://www.orange.pl/");
         Thread.sleep(3000);
         driver.findElement(By.cssSelector("button[title='Zamknij informację o cookies']")).click();
-//        boolean advertIsVisible = driver.findElement(By.cssSelector("button[title='Zamknij szufladę']")).isDisplayed();
-//        WebElement advertPopUp = driver.findElement(By.cssSelector("button[title='Zamknij szufladę']"));
-//        if (advertIsVisible) {
-//            advertPopUp.click();
-//        }
     }
 
     @And("^User clicks on the mobiles offers$")
     public void user_clicks_on_the_mobiles_offers() throws Throwable {
-        driver.findElement(By.id("Menu_B2C_Telefony_i_urządzenia")).click();
         Thread.sleep(3000);
+        boolean advertIsVisible = driver.findElements(By.cssSelector("button[title='Zamknij szufladę']")).size() !=0;
+        if (advertIsVisible == true) {
+            driver.findElement(By.cssSelector("button[title='Zamknij szufladę']")).click();
+        }
+        driver.findElement(By.id("Menu_B2C_Telefony_i_urządzenia")).click();
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("Menu_B2C_Telefony_i_urządzenia_Telefony")));
         driver.findElement(By.id("Menu_B2C_Telefony_i_urządzenia_Telefony")).click();
         Thread.sleep(6000);
     }
 
     @And("^User clicks on first offer with subscription' details button$")
     public void user_clicks_on_first_offer_with_subscription_details_button() throws Throwable {
-//        boolean advertIsVisible = driver.findElement(By.cssSelector("button[title='Zamknij szufladę']")).isDisplayed();
-//        WebElement advertPopUp = driver.findElement(By.cssSelector("button[title='Zamknij szufladę']"));
-//        if (advertIsVisible) {
-//            advertPopUp.click();
-//        }
+        boolean advertIsVisible = driver.findElements(By.cssSelector("button[title='Zamknij szufladę']")).size() !=0;
+        if (advertIsVisible == true) {
+            driver.findElement(By.cssSelector("button[title='Zamknij szufladę']")).click();
+        }
         List<WebElement> offerts = new ArrayList<>();
         offerts = driver.findElements(By.cssSelector("a[title*='Sprawd']"));
         offerts.get(0).click();
-        Thread.sleep(6000);
-        driver.manage().deleteAllCookies();
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[title*='Przejd']")));
         driver.findElement(By.cssSelector("button[title*='Przejd']")).click();
-        Thread.sleep(3000);
     }
 
     @And("^User matches resign from additions option$")
     public void user_matches_resign_from_additions_option() throws Throwable {
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".css-wzdbp7")));
         driver.findElement(By.cssSelector(".css-wzdbp7")).click();
-        Thread.sleep(10000);
+        Thread.sleep(6000);
     }
 
     @When("^User adds offer to basked$")
@@ -94,36 +95,33 @@ public class OrderStep {
         WebElement addToBaskedButton = driver.findElement(By.cssSelector(".css-9as7mc"));
         js.executeScript("arguments[0].scrollIntoView();", addToBaskedButton);
         addToBaskedButton.click();
-        Thread.sleep(20000);
     }
 
     @And("^User confirms the order$")
     public void user_confirms_the_order() throws Throwable {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        WebElement goFurtherButton = driver.findElement(By.cssSelector("button[id='snrs-next-button']"));
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#navigation-next-ora-button")));
+        WebElement goFurtherButton = driver.findElement(By.cssSelector("#navigation-next-ora-button"));
         js.executeScript("arguments[0].scrollIntoView();",goFurtherButton);
         js.executeScript("window.scrollBy(0,-250)");
-//        Thread.sleep(20000);
-        Wait wait = new WebDriverWait(driver, 120);
-        wait.until(ExpectedConditions.elementToBeClickable(goFurtherButton));
-        goFurtherButton.click();
-        driver.findElement(By.cssSelector(".snrs-modal>.snrs-modal-btn-close")).click();
         driver.findElement(By.cssSelector("#navigation-next-ora-button")).click();
     }
 
     @And("^User enters incorrect personal details$")
     public void user_enters_incorrect_personal_details() throws Throwable {
-        Thread.sleep(3000);
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("input[name='firstName']")));
         driver.findElement(By.cssSelector("input[name='firstName']")).sendKeys("Adam");
         driver.findElement(By.cssSelector("input[name='lastName']")).sendKeys("Mickiewicz");
-        driver.findElement(By.cssSelector("input[name='pesel']")).sendKeys("84081635218");
-        driver.findElement(By.cssSelector("input[name='idNumber']")).sendKeys("ARA123858");
+        driver.findElement(By.cssSelector("input[name='pesel']")).sendKeys("73022631389");
+        driver.findElement(By.cssSelector("input[name='idNumber']")).sendKeys("AEL047132");
         driver.findElement(By.cssSelector("input[id='postalCode_main']")).sendKeys("43-300");
         Thread.sleep(3000);
         driver.findElement(By.cssSelector("input[id='streetName_main']")).sendKeys("Warszawska");
-        driver.findElement(By.cssSelector("input[id='streetNumber_main']")).sendKeys("11");
-        driver.findElement(By.cssSelector("input[name='emailAddress']")).sendKeys("abcd@gmail.com");
-        driver.findElement(By.cssSelector("input[name='phoneNumber']")).sendKeys("531555555");
+        driver.findElement(By.cssSelector("input[id='streetNumber_main']")).sendKeys("1");
+        driver.findElement(By.cssSelector("input[name='emailAddress']")).sendKeys("abd@gmail.com");
+        driver.findElement(By.cssSelector("input[name='phoneNumber']")).sendKeys("531555556");
         Thread.sleep(3000);
         driver.findElement(By.xpath("//*[@id=\"tooltip-8821095695420\"]/div/div[1]/label/span[1]")).click();
     }
@@ -135,11 +133,29 @@ public class OrderStep {
 
     @And("^User submits the order$")
     public void user_submits_the_order() throws Throwable {
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("button[id='navigation-next-ora-button']")));
+        Thread.sleep(6000); //Sleep after select all approves
+        //Find chat and close if exists
+        boolean confirmationButton = driver.findElements(By.cssSelector("button[id='navigation-next-ora-button']")).size() !=0;
+        if (confirmationButton == true) {
+            driver.findElement(By.cssSelector("button[id='navigation-next-ora-button']")).click();
+        } else {
+        driver.switchTo().frame(1);
+        WebElement chatClose = driver.findElement(By.id("jw_icon"));
+        wait.until(ExpectedConditions.elementToBeClickable(chatClose));
+        chatClose.click();
+        driver.switchTo().parentFrame();
+        driver.findElement(By.cssSelector(".opl-cookie-control__close")).click();
         driver.findElement(By.cssSelector("button[id='navigation-next-ora-button']")).click();
+        }
     }
 
     @Then("^User is informed that order can not be realized$")
     public void user_is_informed_that_order_can_not_be_realized() throws Throwable {
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        WebElement element = driver.findElement(By.cssSelector("[id='react-modal-5']"));
+        wait.until(ExpectedConditions.elementToBeClickable(element));
         Assert.assertTrue(driver.findElement(By.cssSelector("[id='react-modal-5']")).isDisplayed());
     }
 
@@ -150,7 +166,10 @@ public class OrderStep {
 
     @And("^User is informed that my basket is empty$")
     public void user_is_informed_that_my_basket_is_empty() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        throw new PendingException();
+        Thread.sleep(3000);
+        WebElement element = driver.findElement(By.xpath("//*[contains(text(), 'Twój koszyk jest pusty')]"));
+        WebDriverWait wait = new WebDriverWait(driver, 120);
+        wait.until(ExpectedConditions.visibilityOf(element));
+        Assert.assertTrue(driver.findElement(By.xpath("//*[contains(text(), 'Twój koszyk jest pusty')]")).isDisplayed());
     }
 }
